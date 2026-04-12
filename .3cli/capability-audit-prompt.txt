@@ -1,0 +1,17 @@
+You are conducting a capability audit for a fork of LibreChat v0.8.4. The fork adds three features plus infrastructure changes. Your task: enumerate EVERY testable capability — every function, endpoint, UI interaction, state transition, error path, and configuration option added by this fork.
+
+Read these files first:
+- docs/fork/PRD.md (requirements)
+- docs/fork/HLD.md (architecture and data flows)
+
+Then read every file listed in the HLD section 6 Component Inventory to understand the actual implementation.
+
+For each capability found, output a numbered list with:
+1. Capability name (short)
+2. Feature (F1/F2/F3/Infra)
+3. Layer (Frontend/Backend/Both)
+4. Description (what it does)
+5. Inputs and expected outputs
+6. Error paths (what can go wrong)
+
+Be exhaustive. Include edge cases, error handling, configuration variations, and interaction effects between features. Do not limit yourself to happy paths. Include capabilities implied by the code that are not explicitly stated in the requirements.

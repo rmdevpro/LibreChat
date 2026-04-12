@@ -1,0 +1,98 @@
+I will begin by examining the `onSubmit` handler and the `agent_id` logic in `client/src/components/SidePanel/Agents/AgentPanel.tsx`.
+I will now search for the `composeAgentUpdatePayload` function to understand its role in the submission process.
+I will search for the definition of `composeAgentUpdatePayload` again, this time without the `export const` prefix, to locate its definition.
+I will read the `composeAgentUpdatePayload` function in `client/src/components/SidePanel/Agents/AgentPanel.tsx` to understand how it constructs the payload.
+I will now search for the `useUpdateAgentMutation` hook to understand its implementation and see if there are any conditions that might prevent a network request.
+I will check the `useForm` initialization and the `AgentForm` type definition to see if any validation might be failing for the new fields.
+I will search for the `useForm` call or where `methods` is defined to understand the form configuration.
+I will search for the definition of `getDefaultAgentFormValues` to understand the default form values and any potential validation.
+I will examine `AgentPanel.tsx` to see how the form is updated when an agent is selected, specifically looking for where the `id` field is set.
+I will search for the `useEffect` that calls `reset()` to understand how the form is reset with the agent's data.
+I will search for the `reset(` call specifically within `client/src/components/SidePanel/Agents/AgentPanel.tsx` to find where the form is reset.
+I will read `AgentPanel.tsx` to find any `useEffect` hooks that might be responsible for populating the form when an agent is selected.
+I will search for `useEffect` in `client/src/components/SidePanel/Agents/AgentPanel.tsx` to find where the form might be getting its data.
+I will read the entire `client/src/components/SidePanel/Agents/AgentPanel.tsx` file to ensure I didn't miss any `useEffect` or form reset logic.
+I will check `client/src/components/SidePanel/Agents/AgentSelect.tsx` to see if it contains any logic that calls `reset` or otherwise populates the form data.
+I will search for the definition of `defaultAgentFormValues` in the `packages/data-provider` directory to confirm if it includes the new fields and the `id` field.
+I will examine `client/src/components/SidePanel/Agents/Advanced/AdvancedPanel.tsx` to see if there are any validation rules or issues with the new fields that might prevent the form from submitting.
+I will read `client/src/components/SidePanel/Agents/Advanced/AutoCompact.tsx` to check for any potential validation or state issues.
+I will read `client/src/components/SidePanel/Agents/AgentFooter.tsx` to examine the Save button and its interaction with the form.
+I will check the `Agent` type definition in `packages/data-provider/src/types.ts` to see how the ID fields are structured.
+I will re-read `client/src/components/SidePanel/Agents/AgentSelect.tsx` to confirm if `compact_threshold` and `auto_compact` are handled in `resetAgentForm`.
+I will check the `AgentForm` type definition in `client/src/common/types.ts` to see the structure of the `provider` field and other potential issues.
+I will search for the `FormInput` component to see its implementation and check for any default validation.
+I will read the `FormInput` component in `packages/client/src/components/FormInput.tsx` to understand its behavior and validation logic.
+I will search for the `updateAgent` function in `packages/data-provider/src/data-service.ts` to see how the network request is constructed.
+I will search for the exact definition of `updateAgent` in `packages/data-provider/src/data-service.ts`.
+I will search for `updateAgent =` in `packages/data-provider/src/data-service.ts` to find how it's defined.
+I will read the `updateAgent` function in `packages/data-provider/src/data-service.ts` to see if there are any issues with how the request is made.
+I will check the `agents` endpoint definition in `packages/data-provider/src/endpoints.ts` to see how it handles an empty `path`.
+I will search for the `endpoints` definition in `packages/data-provider/src/index.ts` or similar files to find where `agents` is defined.
+I will check the imports in `packages/data-provider/src/data-service.ts` to find the source of the `endpoints` object.
+I will read `packages/data-provider/src/api-endpoints.ts` to find the `agents` endpoint definition.
+I will search for the `Tools` definition in `packages/data-provider/src/types/agents.ts` to confirm its structure.
+I will check `client/src/data-provider/index.ts` to see how `useUpdateAgentMutation` is exported.
+I will check `packages/data-provider/src/index.ts` to verify the exports, specifically `defaultAgentFormValues`.
+I will check `packages/data-provider/src/types/index.ts` to see if it exports `schemas.ts`.
+I will search for where `schemas.ts` is exported within the `packages/data-provider` directory.
+I will re-examine the `onSubmit` handler in `client/src/components/SidePanel/Agents/AgentPanel.tsx` to see where the `provider` and `model` checks are located.
+I will read `client/src/components/SidePanel/Agents/AgentConfig.tsx` to check for any required fields or validation rules.
+I will read `client/src/components/SidePanel/Agents/AgentCategorySelector.tsx` to check for any validation logic or issues.
+I will check the `createAgent` function in `packages/data-provider/src/data-service.ts` to see if there are any issues.
+I will check the `isEphemeralAgent` function in `client/src/common/utils.ts` (or wherever it's defined) to see how it handles `undefined` or `null`.
+I will search for `function isEphemeralAgent` to find its definition.
+I will check the `package.json` file to see the version of `react-hook-form` being used.
+I will check the `client/package.json` file to see the `react-hook-form` version.
+I will search for the `validateEmail` function to see its implementation and how it handles empty strings.
+I will read the `defaultAgentFormValues` definition in `packages/data-provider/src/schemas.ts` to confirm exactly which keys are present.
+I will check `client/src/components/SidePanel/Agents/AgentConfig.tsx` again to see if the `model` or `provider` fields are registered with `Controller` or `register`.
+I will search for `shouldUnregister` in the codebase to see if it's being used anywhere that might affect the agent form.
+I will read `packages/data-provider/src/request.ts` to see how requests are handled and if there's any logic that might prevent a request from being made.
+I will read `client/src/components/SidePanel/Agents/Code/Form.tsx` to see how `execute_code` is handled.
+I will read `client/src/components/SidePanel/Agents/Code/Action.tsx` to further investigate the `execute_code` field.
+The most likely cause for this issue is that `agent_id` (and potentially other critical fields like `provider` and `model`) are being "lost" or becoming `undefined` when the `AdvancedPanel` is active. 
+
+In `react-hook-form` (v7+), fields registered via `Controller` or `register` are **unregistered when they unmount** unless `shouldUnregister: false` is explicitly set in `useForm`. Since `AgentConfig` (which contains the `id`, `name`, `provider`, and `model` fields) is unmounted when switching to the `AdvancedPanel`, these fields are being removed from the form state that `handleSubmit` passes to `onSubmit`.
+
+When `agent_id` becomes `undefined`:
+1. `onSubmit` skips the `if (agent_id)` block.
+2. It falls through to the "Create" logic.
+3. Because `provider` and `model` are also in unmounted components, they are likely `undefined` as well.
+4. The code hits the `if (!provider || !model)` check, shows a toast (which might be missed or hidden), and **returns early without making any network request**.
+
+### Recommended Fix:
+
+1. **Explicitly set `shouldUnregister: false`** in the `useForm` call within `AgentPanel.tsx` to ensure that values from unmounted panels are preserved.
+2. **Use `getValues()`** for critical fields like `id`, `provider`, and `model` within `onSubmit` to ensure you are getting the most up-to-date values from the form's internal state, regardless of whether they are currently mounted.
+
+```typescript
+// client/src/components/SidePanel/Agents/AgentPanel.tsx
+
+// 1. Update useForm configuration
+const methods = useForm<AgentForm>({
+  defaultValues: getDefaultAgentFormValues(),
+  mode: 'onChange',
+  shouldUnregister: false, // Ensure values persist across panel switches
+});
+
+// 2. Use getValues in onSubmit for critical fields
+const onSubmit = useCallback(
+  async (data: AgentForm) => {
+    // ... tools logic ...
+    
+    // Instead of relying on scoped agent_id from useWatch, which might be stale or undefined
+    const currentId = getValues('id');
+    const { payload: basePayload, provider, model } = composeAgentUpdatePayload(data, currentId);
+
+    if (currentId) {
+       // ... update logic ...
+       update.mutate({ agent_id: currentId, data: { ...basePayload, tools } });
+       return;
+    }
+    // ...
+  },
+  [getValues, ...otherDeps]
+);
+```
+
+Additionally, ensure `composeAgentUpdatePayload` has a safety check for when `provider` is an object but potentially `null` or missing the `value` property, as `(data.provider as StringOption).value` will throw a runtime error if `data.provider` is `undefined`, preventing the mutation from ever being called.

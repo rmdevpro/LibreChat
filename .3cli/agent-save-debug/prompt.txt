@@ -1,0 +1,24 @@
+We are debugging a LibreChat agent builder UI issue. The context below is from the current Claude Code session.
+
+THE PROBLEM:
+In `client/src/components/SidePanel/Agents/AgentPanel.tsx`, the `onSubmit` handler calls `update.mutate({ agent_id, data: {...basePayload, tools} })` at line 443 when `agent_id` exists. The Save button (type="submit") is clicked, the form submit event fires (confirmed via browser console), but NO network request is made — no fetch, no XHR, nothing reaches the backend.
+
+KEY CODE FACTS:
+- `agent_id = useWatch({ control, name: 'id' })` (line 302) — reads from form field named 'id'
+- The Advanced panel is a sub-view within the same form (same FormProvider, same form element)
+- The agent IS selected (combobox shows "Test Compact Agent")
+- `update = useUpdateAgentMutation(...)` from React Query
+- The form submit event DOES fire when Save is clicked
+- `handleSubmit(onSubmit)` is the form's onSubmit handler
+- No validation errors visible (no aria-invalid elements)
+- No unhandled rejections caught
+- `dirtyFields` from `formState` is used in `isAvatarUploadOnlyDirty` check only — not to gate the update call
+
+THE QUESTION:
+Why would `handleSubmit(onSubmit)` fire (submit event confirmed) but `update.mutate` never make a network request? What is the most likely cause given this code structure?
+
+SPECIFICALLY: Could `agent_id` from `useWatch({ control, name: 'id' })` be undefined/null when saving from the Advanced sub-panel? And if so, why — since the agent is clearly loaded?
+
+The new fields we added (`auto_compact: boolean`, `compact_threshold: number`) are in the form's `defaultAgentFormValues` and in `composeAgentUpdatePayload`. The only change we made to AgentPanel.tsx was adding `auto_compact` and `compact_threshold` to the destructuring and payload.
+
+Please analyze and suggest the most likely root cause and fix.

@@ -1,0 +1,43 @@
+You are reviewing three engineering documents for a fork of LibreChat v0.8.4. Your job is to find errors, omissions, inconsistencies, and gaps. Be critical — these documents will be used to write code and tests.
+
+Read all three documents:
+1. docs/fork/PRD.md (Product Requirements Document)
+2. docs/fork/HLD.md (High-Level Design)
+3. docs/fork/TEST_PLAN.md (Test Plan)
+
+Then review each document against these criteria:
+
+**PRD Review:**
+- Are the requirements complete and unambiguous?
+- Are there missing requirements implied by the HLD or test plan but not stated?
+- Are acceptance criteria testable?
+- Are there contradictions between requirements?
+
+**HLD Review:**
+- Does every requirement in the PRD have a corresponding data flow?
+- Are the file lists accurate? (Check that files listed actually exist in the codebase)
+- Are the data flows complete — every step from user action to persistent state and back?
+- Are there missing integration points?
+- Does the component inventory match what's actually in the code?
+
+**Test Plan Review:**
+- Does every PRD requirement have at least one test case?
+- Are there capabilities in the code not covered by tests?
+- Is the test infrastructure realistic and achievable?
+- Are error paths covered, not just happy paths?
+- Is the traceability matrix complete — every test maps to a capability?
+- Are the gray-box verification methods practical?
+
+**Cross-Document Consistency:**
+- Do the three documents agree on feature scope, file lists, data flows?
+- Are there things stated in one document that contradict another?
+- Are there gaps — things mentioned in one doc but missing from the others?
+
+For each finding, state:
+1. Document (PRD/HLD/TEST_PLAN)
+2. Section
+3. Severity (Critical / Major / Minor / Suggestion)
+4. Finding description
+5. Recommended fix
+
+Be exhaustive. Do not just say "looks good." Find problems.
